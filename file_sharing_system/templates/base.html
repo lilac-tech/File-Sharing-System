@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+<html>
+<head>
+  <title>File Sharing System</title>
+</head>
+
+<body>
+  <header class="text-gray-600 body-font bg-yellow-200" style="user-select: auto;">
+    <div class="container mx-auto flex flex-wrap p-5 flex-col lg:flex-row items-center" style="user-select: auto;">
+      <a class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0" style="user-select: auto;">
+        <img src='/static/Folder-Icon-SVG.png' width="50" alt="Logo">
+      </a>
+      <nav class="lg:mr-auto lg:ml-4 md:py-1 md:pl-4 lg:border-l lg:border-gray-400	flex flex-wrap items-center text-base justify-center" style="user-select: auto;">
+        <a class="mr-5 hover:text-gray-900" href="/home/" style="user-select: auto;">Home</a>
+        <a class="mr-5 hover:text-gray-900" href="/search/" style="user-select: auto;">Search</a>
+        <a class="mr-5 hover:text-gray-900" href="/login/" style="user-select: auto;">Login</a>
+        {% if user.is_staff %}
+          <a class="mr-5 hover:text-gray-900" href="/file_upload/" style="user-select: auto;">File Upload</a>
+        {% endif %}
+        {% if user.is_admin %}
+          <a class="mr-5 hover:text-gray-900" href="/admin/" style="user-select: auto;">Admin</a>
+        {% endif %}
+      </nav>
+
+
+      <div>
+        {%if request.user.is_authenticated%}
+        <a class="mr-5 hover:text-gray-900" style="user-select: auto;">hello,{{request.user.name}}</a>
+        {%endif%}
+        <a href="/logout/" style="user-select:">
+        <button class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0"  style="user-select: auto;">Logout
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24" style="user-select: auto;">
+            <path d="M5 12h14M12 5l7 7-7 7" style="user-select: auto;"></path>
+          </svg>
+        </button>
+        </a>
+      </div>
+    </div>
+  </header>
+  {% block content %}
+
+  {% endblock %}
+</body>
+</html>

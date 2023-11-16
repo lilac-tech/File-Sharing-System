@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="text-gray-700 body-font overflow-hidden bg-white">
+  <div class="container px-5 py-24 mx-auto">
+    <div class="lg:w-4/5 mx-auto flex flex-wrap">
+      {% if document.file_type in video_formats %}
+      <img alt="file thumbnail" class="lg:w-1/2 w-full object-center rounded border border-gray-200" src="/static/video-icon.png">
+      {% elif document.thumbnail.url != None %}
+      <img alt="file thumbnail" class="lg:w-1/2 w-full object-center rounded border border-gray-200" src={{document.thumbnail.url}}>
+      {% else %}
+      <img alt="file thumbnail" class="lg:w-1/2 w-full object-center rounded border border-gray-200" src="/static/Folder-Icon-SVG.png">
+      {% endif %}
+      <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+        <h2 class="text-sm title-font text-gray-500 tracking-widest">{{document.file_type}}</h2>
+        <h1 class="text-gray-900 text-3xl title-font font-medium mb-1">{{document.doc_name}}</h1>
+        <div class="flex mb-4">
+          <span class="title-font font-medium text-2l text-gray-900"> {{document.times_viewed}} Views  </span>
+          <span class="title-font font-medium text-2l text-gray-900 border-l-2 border-gray-200">Uploaded by: {{document.uploaded_by.name}} </span>
+          <span class="title-font font-medium text-2l text-gray-900 border-l-2 border-gray-200"> {{document.size|floatformat:2}} Mb </span>
+          <span class="flex ml-3 pl-3 py-2 border-l-2 border-gray-200">
+            <a class="text-gray-500">
+              <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"></path>
+              </svg>
+            </a>
+            <a class="ml-2 text-gray-500">
+              <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path>
+              </svg>
+            </a>
+            <a class="ml-2 text-gray-500">
+              <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+              </svg>
+            </a>
+          </span>
+        </div>
+        <div class="flex">
+          <span class="title-font font-medium text-2xl text-gray-900">{{document.size|floatformat:2}} Mb</span>
+          <a href="{{document.document.url}}" <button class="flex ml-auto text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">Preview</button></a>
+          </button>
+          <a href="{{document.document.url}}" download <button class="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">Download</button></a>
+          </button>
+        </div>
+        {% if document.file_type == 'pdf' %}
+        <embed src="{{document.document.url}}" type="application/pdf" height="700px" width="500">
+        {% endif %}
+      </div>
+    </div>
+    <div class="flex mx-auto items-center justify-center shadow-lg mt-8 mb-2">
+      <form method="post" action="{% url 'file_view' document.doc_id %}" class="w-full bg-white rounded-lg px-4 pt-2">{% csrf_token%}
+        <div class="flex flex-wrap -mx-3 mb-6">
+          <h2 class="px-4 pt-3 pb-2 text-gray-800 text-lg">Add a new comment</h2>
+          <div class="w-full md:w-full px-3 mb-2 mt-2">
+            <textarea class="bg-gray-100 rounded border border-gray-400 leading-normal resize-none w-full h-20 py-2 px-3 font-medium placeholder-gray-700 focus:outline-none focus:bg-white" name="body" placeholder='Type Your Comment' required></textarea>
+          </div>
+          <div class="w-full md:w-full flex items-start md:w-full px-3">
+            <div class="flex items-start w-1/2 text-gray-700 px-2 mr-auto">
+              <svg fill="none" class="w-5 h-5 text-gray-600 mr-1" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <p class="text-xs md:text-sm pt-px">Only for suggestions or reports.</p>
+            </div>
+            <div class="-mr-1">
+              <input type='submit' class="bg-white text-gray-700 font-medium py-1 px-4 border border-gray-400 rounded-lg tracking-wide mr-1 hover:bg-gray-100" value='Post Comment'>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    {% for comment in comments %}
+      <div class="bg-yellow-100 rounded shadow-sm p-8">
+        <div class="flex justify-between mb-1">
+          <p class="text-grey-darkest leading-normal text-lg">
+            {{comment.body}}
+          </p>
+        </div>
+        <div class="text-grey-dark leading-normal text-sm">
+          <p>{{comment.name}} <span class="mx-1 text-xs">&bull;</span> {{ comment.created_on}}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
