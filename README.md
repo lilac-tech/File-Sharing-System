@@ -7,4 +7,4 @@
 # Setup
  You need to have python installed.
  
- Run main.py and yor're done.
+  1.Run main.py and you're done.
